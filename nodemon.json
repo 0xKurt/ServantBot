@@ -1,5 +1,5 @@
 {
   "ext": "ts, js, json",
   "watch": ["src"],
-  "exec": "tsc -p . && node dist/index.js"
+  "exec": "tsc -p . && clear && node dist/src/index.js"
 }
