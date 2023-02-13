@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { CoinData } from "../../../types";
+import { CoinData } from "../../types";
 import ICoinDataModule from "./ICoinDataModule";
 
 class Coinmarketcap implements ICoinDataModule {

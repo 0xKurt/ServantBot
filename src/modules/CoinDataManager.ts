@@ -1,4 +1,4 @@
-import { CoinData } from "../../types";
+import { CoinData } from "../types";
 import ICoinDataModule from "./IncomingCoinData/ICoinDataModule";
 import pc from "picocolors"
 

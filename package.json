@@ -12,11 +12,13 @@
     "typescript": "^4.9.5"
   },
   "scripts": {
-    "start": "node index.ts",
+    "start": "tsc -p . && clear && node dist/index.js",
     "build": "tsc",
     "start:dev": "nodemon"
   },
   "devDependencies": {
-    "@types/node": "^18.13.0"
+    "@types/node": "^18.13.0",
+    "fs": "^0.0.1-security",
+    "telegraf": "^4.11.2"
   }
 }
