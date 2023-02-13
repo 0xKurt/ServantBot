@@ -16,14 +16,14 @@ class DummyModule implements ICoinDataModule {
     if(this.out === 0)
     return [
       {
-        symbol: 'GENAI',
+        symbol: 'TEST',
         name: "",
-        address: '0x260eA2A1710f14D670A37cfA3f57A9CeD6E795e2',
+        address: '0x1234567890987654321234567890987654321234',
         network: 'BNB',
         dateAdded: '2023-02-11T16:47:24.000Z',
         dateLaunched: '2023-02-09T00:00:00.000Z',
         website: 'cmc: undefined website?',
-        twitter: 'https://twitter.com/genieaiart',
+        twitter: 'https://twitter.com/test',
         twitter_user: undefined,
         twitterFollowers: 0
       },
@@ -44,10 +44,10 @@ class DummyModule implements ICoinDataModule {
     if(this.out === 1)
     return [
       {
-        symbol: 'AIONMARS',
-        name: 'AIon Mars',
-        address: '0xa2214039c2ccb9b86d351000ba2f126f45ce44a4',
-        network: 'BNB',
+        symbol: 'DUMMY',
+        name: 'Dummy Inu',
+        address: '0xabcdefga0987654321234567890987654321234',
+        network: 'arb',
         dateAdded: '2023-02-11T17:00:19.000Z',
         dateLaunched: '2023-02-10T00:00:00.000Z',
         website: 'https://aionmars.finance/',
@@ -56,15 +56,15 @@ class DummyModule implements ICoinDataModule {
         twitterFollowers: 0
       },
       {
-        symbol: 'GENAI',
-        name: 'Genie AI',
+        symbol: 'TEST',
+        name: 'Test Moon',
         address: null,
         network: 'BNB',
         dateAdded: '2023-02-11T16:47:24.000Z',
         dateLaunched: '2023-02-09T00:00:00.000Z',
-        website: 'https://genieart.com',
-        twitter: 'https://twitter.com/genieaiart',
-        twitter_user: 'geniart',
+        website: 'https://test.com',
+        twitter: 'https://twitter.com/test',
+        twitter_user: 'test',
         twitterFollowers: 0
       }
     ];
