@@ -15,9 +15,10 @@ class BotManager {
     console.log(`     ${pc.green("✓")} Bot registered: ${bot.name()}`);
   }
 
-  sendMessage(data: CoinData): void {
+  async sendMessage(data: CoinData): Promise<void> {
     for (const bot of this.bots) {
-      bot.sendMessage(data);
+      console.log(`     ${pc.green("✓")} Sending data to bot: ${bot.name()}`, data);
+      // await bot.sendMessage(data);
     }
   }
 }

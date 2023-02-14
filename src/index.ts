@@ -42,8 +42,8 @@ const task = async () => {
 
   if (result) {
     // Send the data to all the bots
-    result.forEach((data) => {
-      botManager.sendMessage(data);
+    result.forEach(async (data) => {
+      await botManager.sendMessage(data);
     });
   }
 };

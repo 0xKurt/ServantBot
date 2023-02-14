@@ -40,7 +40,7 @@ class TelegramBot implements IBot {
   }
 
   // styling: https://core.telegram.org/bots/api#html-style
-  public sendMessage(data: CoinData): void {
+  public async sendMessage(data: CoinData): Promise<void> {
     const message =
       `<b>New listing: ${data.name} (${data.symbol})</b>${BREAK}` +
       `Network: ${data.network}${BREAK}` +
@@ -51,18 +51,31 @@ class TelegramBot implements IBot {
       `Twitter: ${data.twitter}${BREAK}`;
 
     for (const groupId of this.groupList) {
-      this.send(message, groupId);
+      await this.send(message, groupId);
     }
   }
 
-  private send(text: string, groupId: string): void {
+  private async send(
+    text: string,
+    groupId: string,
+  ): Promise<void> {
     try {
-      this.bot.telegram.sendMessage(groupId, text, {
-        parse_mode: 'HTML',
+      await this.bot.telegram.sendMessage(groupId, text, {
+        parse_mode: "HTML",
         disable_web_page_preview: true,
       });
-    } catch (error) {
-      console.log(pc.red("Error sending telegram message: "), error);
+    } catch (error: any) {
+      if (
+        error.response &&
+        error.response.error_code === 400 &&
+        error.response.description.includes("supergroup")
+      ) {
+        this.groupList.delete(groupId);
+        this.saveGroupList();
+      } else {
+        console.log("Error sending telegram message: ", error);
+        // handle other errors
+      }
     }
   }
 
@@ -110,8 +123,8 @@ class TelegramBot implements IBot {
       const updates = json.result;
 
       for (const update of updates) {
-        if (update.message && update.message.chat.type === "group") {
-          this.groupList.add(update.message.chat.id.toString());
+        if (update.my_chat_member && (update.my_chat_member.chat.type === "group" || update.my_chat_member.chat.type === "supergroup")) {
+          this.groupList.add(update.my_chat_member.chat.id.toString());
         }
       }
       this.saveGroupList();
