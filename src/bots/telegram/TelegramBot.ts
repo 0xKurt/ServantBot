@@ -3,6 +3,7 @@ import fs from "fs";
 import IBot from "../IBot";
 import { CoinData } from "../../types";
 import axios from "axios";
+import pc from "picocolors";
 
 const FILENAME = `${process.cwd()}/telegram_group_list.json`;
 const BREAK = "\n";
@@ -55,10 +56,14 @@ class TelegramBot implements IBot {
   }
 
   private send(text: string, groupId: string): void {
-    this.bot.telegram.sendMessage(groupId, text, {
-      parse_mode: 'HTML',
-      disable_web_page_preview: true,
-    });
+    try {
+      this.bot.telegram.sendMessage(groupId, text, {
+        parse_mode: 'HTML',
+        disable_web_page_preview: true,
+      });
+    } catch (error) {
+      console.log(pc.red("Error sending telegram message: "), error);
+    }
   }
 
   private saveGroupList(): void {
