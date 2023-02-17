@@ -1,15 +1,19 @@
 import dotenv from "dotenv";
-import CoinDataManager from "./modules/CoinDataManager";
+import CoinDataManager from "./modules/IncomingCoinData/CoinDataManager";
 import Coinmarketcap from "./modules/IncomingCoinData/Coinmarketcap";
 import DummyModule from "./modules/IncomingCoinData/DummyModule";
 import pc from "picocolors";
 import { timeNow } from "./utils";
 import BotManager from "./bots/BotManager";
 import TelegramBot from "./bots/telegram/TelegramBot";
+import ModifierManager from "./modules/DatasetModifier/ModifierManager";
+import TwitterModifier from "./modules/DatasetModifier/TwitterModifier";
 
 dotenv.config();
 
-console.log(pc.green(pc.bold("🤖 ServantBot v0.0.1 started")));
+const DEV = true;
+
+console.log(pc.green(pc.bold("🤖 TokenServantBot started")));
 
 // CoinDataManager is a class that will call all the APIs and merge the data together
 // It will also filter out any duplicate data
@@ -28,8 +32,17 @@ const botManager = new BotManager();
 
 // Telegram bot
 // You can set the TELEGRAM_API_KEY environment variable to enable the telegram bot
-if (process.env.TELEGRAM_API_KEY)
-  botManager.registerBot(new TelegramBot(process.env.TELEGRAM_API_KEY));
+let telegramBot: TelegramBot | null = null;
+if (process.env.TELEGRAM_API_KEY) {
+  telegramBot = new TelegramBot(process.env.TELEGRAM_API_KEY);
+  botManager.registerBot(telegramBot);
+}
+
+// Modifiers are used to modify the data before it is sent to the bots
+const modManager = new ModifierManager();
+
+// Register all the modifiers here
+modManager.registerMod(new TwitterModifier()); // add followers count
 
 // ===> Main loop
 // This will run every 10 minutes by default
@@ -39,14 +52,28 @@ if (process.env.TELEGRAM_API_KEY)
 const task = async () => {
   // Get latest coin data
   const result = await coinDataManager.callApis();
-
   if (result) {
     // Send the data to all the bots
     result.forEach(async (data) => {
-      await botManager.sendMessage(data);
+      let modData = data;
+      modData = await modManager.applyChanges(data);
+      await botManager.sendMessage(modData);
     });
   }
 };
+
+const main = async () => {
+  if (!DEV && telegramBot) {
+    await telegramBot.sendText(
+      `🤖 <b>ServantBot v0.0.1</b> 🤖 \nstarted at ${timeNow()}\n\nI will send the last dataset again to test my functionality.`
+    );
+    await task();
+  }
+};
+
+setTimeout(async () => {
+  await main();
+}, 10 * 1000);
 
 setInterval(
   task,

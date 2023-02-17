@@ -1,5 +1,5 @@
-import { CoinData } from "../types";
-import ICoinDataModule from "./IncomingCoinData/ICoinDataModule";
+import { CoinData } from "../../types";
+import ICoinDataModule from "./ICoinDataModule";
 import pc from "picocolors"
 
 class CoinDataManager {

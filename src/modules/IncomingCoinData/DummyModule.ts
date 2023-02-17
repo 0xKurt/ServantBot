@@ -9,7 +9,7 @@ class DummyModule implements ICoinDataModule {
   }
 
   name(): string {
-    return `Dummy Module v1.0.0 - ${this.out}`;
+    return `Dummy Module - ${this.out}`;
   }
 
   async fetchResults(): Promise<CoinData[] | null> {
@@ -24,8 +24,7 @@ class DummyModule implements ICoinDataModule {
         dateLaunched: '2023-02-09T00:00:00.000Z',
         website: 'cmc: undefined website?',
         twitter: 'https://twitter.com/test',
-        twitter_user: undefined,
-        twitterFollowers: 0
+        twitterUser: undefined,
       },
       {
         symbol: 'AABBCCDD',
@@ -36,8 +35,7 @@ class DummyModule implements ICoinDataModule {
         dateLaunched: null,
         website: 'https://www.AABBCCDD.art/',
         twitter: 'https://twitter.com/AABBCCDD',
-        twitter_user: 'AABBCCDD',
-        twitterFollowers: 0
+        twitterUser: 'AABBCCDD',
       }
     ];
 
@@ -52,8 +50,7 @@ class DummyModule implements ICoinDataModule {
         dateLaunched: '2023-02-10T00:00:00.000Z',
         website: 'https://aionmars.finance/',
         twitter: 'https://twitter.com/AIonMars_AI',
-        twitter_user: 'AIonMars_AI',
-        twitterFollowers: 0
+        twitterUser: 'AIonMars_AI',
       },
       {
         symbol: 'TEST',
@@ -64,8 +61,7 @@ class DummyModule implements ICoinDataModule {
         dateLaunched: '2023-02-09T00:00:00.000Z',
         website: 'https://test.com',
         twitter: 'https://twitter.com/test',
-        twitter_user: 'test',
-        twitterFollowers: 0
+        twitterUser: 'test',
       }
     ];
     

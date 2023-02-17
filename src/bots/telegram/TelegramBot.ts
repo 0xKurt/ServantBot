@@ -3,7 +3,7 @@ import fs from "fs";
 import IBot from "../IBot";
 import { CoinData } from "../../types";
 import axios from "axios";
-import pc from "picocolors";
+import { beautifyTime } from "../../utils";
 
 const FILENAME = `${process.cwd()}/telegram_group_list.json`;
 const BREAK = "\n";
@@ -32,23 +32,41 @@ class TelegramBot implements IBot {
   }
 
   public name(): string {
-    return "Telegram Bot v1.0.0";
+    return "Telegram Bot";
   }
 
   public start(): void {
     this.bot.launch();
   }
 
+  public async sendText(data: string): Promise<void> {
+    for (const groupId of this.groupList) {
+      await this.send(data, groupId);
+    }
+  }
+
   // styling: https://core.telegram.org/bots/api#html-style
   public async sendMessage(data: CoinData): Promise<void> {
-    const message =
-      `<b>New listing: ${data.name} (${data.symbol})</b>${BREAK}` +
-      `Network: ${data.network}${BREAK}` +
-      `Address: ${data.address}${BREAK}` +
-      `Date added: ${data.dateAdded}${BREAK}` +
-      `Date launched: ${data.dateLaunched}${BREAK}` +
-      `Website: ${data.website}${BREAK}` +
-      `Twitter: ${data.twitter}${BREAK}`;
+    let message =
+    `<b>💎 New listing 💎\n${data.name} (${data.symbol})</b>${BREAK + BREAK}` +
+
+    `Network: ${data.network}${BREAK}` +
+    `Address: ${data.address}${BREAK + BREAK}` +
+    `Date added: ${beautifyTime(data.dateAdded)}${BREAK}` +
+    `Date launched: ${beautifyTime(data.dateLaunched)}${BREAK + BREAK}` +
+
+    `Website: ${data.website?.replace("https://", "")}${BREAK}` +
+    `Cmc: ${data.cmc?.replace("https://", "")}${BREAK + BREAK}` +
+
+    `<b>Twitter:</b> ${data.twitter?.replace("https://", "")}${BREAK}`;
+  
+  if (data.twitterStats) {
+    message +=
+      `   Follower: ${data.twitterStats.followers}${BREAK}` +
+      `   Created at: ${beautifyTime(data.twitterStats.createdAt)}${BREAK}` +
+      `   Verified: ${data.twitterStats.verified}${BREAK}` +
+      `   Statuses: ${data.twitterStats.statusCount}${BREAK + BREAK}`;
+  }
 
     for (const groupId of this.groupList) {
       await this.send(message, groupId);

@@ -1,5 +1,9 @@
 export const timeNow = (): string => {
-  const date = new Date();
+  return beautifyTime(null);
+};
+
+export const beautifyTime = (time: string | null | undefined): string => {
+  const date = time ? new Date(time) : new Date();
   const dateOptions: any = {
     day: "2-digit",
     month: "2-digit",
@@ -10,5 +14,5 @@ export const timeNow = (): string => {
   const dateString = date.toLocaleDateString("de-DE", dateOptions);
   const timeString = date.toLocaleTimeString("de-DE", timeOptions);
 
-  return `${dateString}. ${timeString}`;
+  return `${dateString} ${timeString}`;
 };
