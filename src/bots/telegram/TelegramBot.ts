@@ -48,15 +48,15 @@ class TelegramBot implements IBot {
   // styling: https://core.telegram.org/bots/api#html-style
   public async sendMessage(data: CoinData): Promise<void> {
     let message =
-    `<b>💎 New listing 💎\n${data.name} (${data.symbol})</b>${BREAK + BREAK}` +
+    `<b>💎 New listing 💎\n${data.name} (${data.symbol})</b>${BREAK}` +
+    `${data.cmc?.replace("https://", "")}${BREAK + BREAK}` +
 
     `Network: ${data.network}${BREAK}` +
     `Address: ${data.address}${BREAK + BREAK}` +
     `Date added: ${beautifyTime(data.dateAdded)}${BREAK}` +
     `Date launched: ${beautifyTime(data.dateLaunched)}${BREAK + BREAK}` +
 
-    `Website: ${data.website?.replace("https://", "")}${BREAK}` +
-    `Cmc: ${data.cmc?.replace("https://", "")}${BREAK + BREAK}` +
+    `Website: ${data.website?.replace("https://", "")}${BREAK+BREAK}` +
 
     `<b>Twitter:</b> ${data.twitter?.replace("https://", "")}${BREAK}`;
   

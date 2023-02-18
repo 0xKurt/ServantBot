@@ -11,8 +11,6 @@ import TwitterModifier from "./modules/DatasetModifier/TwitterModifier";
 
 dotenv.config();
 
-const DEV = true;
-
 console.log(pc.green(pc.bold("🤖 TokenServantBot started")));
 
 // CoinDataManager is a class that will call all the APIs and merge the data together
@@ -63,9 +61,9 @@ const task = async () => {
 };
 
 const main = async () => {
-  if (!DEV && telegramBot) {
+  if (process.env.PRODUCTION && telegramBot) {
     await telegramBot.sendText(
-      `🤖 <b>ServantBot v0.0.1</b> 🤖 \nstarted at ${timeNow()}\n\nI will send the last dataset again to test my functionality.`
+      `🤖 <b>TokenServantBot</b> 🤖 \nstarted at ${timeNow()}\n\nI will send the last dataset again to test my functionality.`
     );
     await task();
   }

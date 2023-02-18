@@ -1,0 +1,58 @@
+name: Node.js CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'yarn'
+    - run: yarn
+    - run: yarn build
+
+  deploy:
+    needs: [build]
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Install ssh client
+      run: sudo apt-get install -y ssh
+    - name: Add SSH private key
+      run: |
+        mkdir -p ~/.ssh/
+        echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+    - name: Disable host key checking
+      run: echo "StrictHostKeyChecking no" >> ~/.ssh/config
+    - name: SSH and deploy node app
+      run: |
+        ssh -i ~/.ssh/id_rsa \
+        -o "StrictHostKeyChecking no" \
+        -p ${{ secrets.SSH_PORT }} \
+        ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} \
+        'cd ~/app/ServantBot \
+        && git pull origin master \
+        && yarn \
+        && yarn build \
+        && COINMARKETCAP_API_KEY=${{ secrets.COINMARKETCAP_API_KEY }} \
+        COINMARKETCAP_RESULT_COUNT=${{ secrets.COINMARKETCAP_RESULT_COUNT }} \
+        TELEGRAM_API_KEY=${{ secrets.TELEGRAM_API_KEY }} \
+        TWITTER_API=${{ secrets.TWITTER_API }} \
+        PRODUCTION=${{ secrets.PRODUCTION }} \
+        npx pm2 restart --update-env tokenservant-app'
