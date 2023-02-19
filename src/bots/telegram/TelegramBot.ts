@@ -49,12 +49,11 @@ class TelegramBot implements IBot {
   public async sendMessage(data: CoinData): Promise<void> {
     let message =
       `<b>💎 New listing 💎\n${data.name} (${data.symbol})</b>${BREAK}` +
-      `<a href="${data.cmc?.replace("https://", "")}">Coinmarketcap</a> • ` +
-      `<a href="${data.website?.replace("https://", "")}>Website"</a> • ` +
-      `<a href="${data.twitter?.replace("https://", "")}">Twitter</a>${BREAK}` +
+      `<a href="${data.cmc}">Coinmarketcap</a> • ` +
+      `<a href="${data.website}">Website"</a> • ` +
+      `<a href="${data.twitter}">Twitter</a>${BREAK}` +
       `${BREAK}Network: ${data.network}${BREAK}` +
-      `Address: ${data.address}${BREAK}` +
-      `Website: ${data.website?.replace("https://", "")}${BREAK}`;
+      `Address: ${data.address}${BREAK}`
 
     message += this.getTwitterData(data);
     message += this.getLiquidityData(data);
@@ -187,7 +186,7 @@ class TelegramBot implements IBot {
 
       let liqEmoji = "⚠️";
 
-      if (liquidity > 100000) {
+      if (liquidity > 50000) {
         liqEmoji = "⁉️";
       }
       if (liquidity > 1000000) {
