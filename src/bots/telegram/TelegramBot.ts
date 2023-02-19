@@ -49,11 +49,11 @@ class TelegramBot implements IBot {
   public async sendMessage(data: CoinData): Promise<void> {
     let message =
       `<b>💎 New listing 💎\n${data.name} (${data.symbol})</b>${BREAK}` +
-      `${data.cmc?.replace("https://", "")}${BREAK + BREAK}` +
-      `Network: ${data.network}${BREAK}` +
-      `Address: ${data.address}${BREAK + BREAK}` +
+      `${data.cmc?.replace("https://", "")}${BREAK}` +
+      `${BREAK}Network: ${data.network}${BREAK}` +
+      `Address: ${data.address}${BREAK}` +
       `Website: ${data.website?.replace("https://", "")}${BREAK}` +
-      `<b>Twitter:</b> ${data.twitter?.replace("https://", "")}${BREAK}`;
+      `${BREAK}<b>Twitter:</b> ${data.twitter?.replace("https://", "")}${BREAK}`;
 
     message += this.getTwitterData(data);
     message += this.getLiquidityData(data);
@@ -184,7 +184,7 @@ class TelegramBot implements IBot {
       });
 
       message +=
-        `<b>Liquidity:</b> ${BREAK}` +
+        `${BREAK}<b>Liquidity:</b> ${BREAK}` +
         `   Exchanges: ${data.exchangeData.length}${BREAK}` +
         `   Price: $${price > 1 ? price.toFixed(2) : price}${BREAK}` +
         `   Liquidity: $${formatLiquidity(liquidity)}${BREAK + BREAK}`;
