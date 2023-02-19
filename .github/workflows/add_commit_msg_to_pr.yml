@@ -12,9 +12,13 @@ jobs:
       - name: Add commit messages to PR body
         run: |
           PR_NUMBER=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
-          COMMIT_MESSAGES=$(git log --format="%s" HEAD...HEAD~1)
-          PAYLOAD=$(echo '{}' | jq --arg body "$(jq -Rs . <<< "$COMMIT_MESSAGES")" '.body = $body')
-          curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            -X PATCH \
-            -d "$PAYLOAD" \
-            "https://api.github.com/repos/${{ github.repository }}/issues/$PR_NUMBER"
+          COMMIT_MESSAGES=$(git log --format="%s" HEAD...HEAD~1 || true)
+          if [ -z "$COMMIT_MESSAGES" ]; then
+            echo "No commit messages found"
+          else
+            PAYLOAD=$(echo '{}' | jq --arg body "$(jq -Rs . <<< "$COMMIT_MESSAGES")" '.body = $body')
+            curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+              -X PATCH \
+              -d "$PAYLOAD" \
+              "https://api.github.com/repos/${{ github.repository }}/issues/$PR_NUMBER"
+          fi
