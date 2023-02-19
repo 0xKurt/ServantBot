@@ -60,11 +60,12 @@ const task = async () => {
   }
 };
 
-const main = async () => {
+const onStartup = async () => {
   if (process.env.PRODUCTION === "true" && telegramBot) {
     await telegramBot.sendText(
       `🤖 <b>TokenServantBot</b> 🤖 \nstarted at ${timeNow()}\nUpdate(s):\n${process.env.UPDATES}\n\nI will send the last dataset again to test my functionality.`
     );
+  }
   await task();
 };
 
