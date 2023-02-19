@@ -54,5 +54,5 @@ jobs:
         TELEGRAM_API_KEY=${{ secrets.TELEGRAM_API_KEY }} \
         TWITTER_API=${{ secrets.TWITTER_API }} \
         PRODUCTION=${{ secrets.PRODUCTION }} \
-        UPDATES=${{ github.event.push.body }} \
+        UPDATES=${{ github.event.pull_request.merge_commit_message }} \
         npx pm2 restart --update-env tokenservant-app'
