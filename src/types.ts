@@ -11,6 +11,7 @@ export type CoinData = {
   twitterUser?: string | null;
   cmc?: string | null;
   twitterStats?: TwitterStats;
+  exchangeData?: ExchangeData[];
 }
 
 export type TwitterStats = {
@@ -18,6 +19,13 @@ export type TwitterStats = {
   createdAt?: string;
   verified?: boolean;
   statusCount?: number;
+}
+
+export type ExchangeData = {
+  name: string;
+  pairContract?: string;
+  price: number;
+  liquidity: number;
 }
 
 

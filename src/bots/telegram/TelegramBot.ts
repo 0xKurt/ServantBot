@@ -3,7 +3,7 @@ import fs from "fs";
 import IBot from "../IBot";
 import { CoinData } from "../../types";
 import axios from "axios";
-import { beautifyTime, olderThanDays } from "../../utils";
+import { beautifyTime, formatLiquidity, olderThanDays } from "../../utils";
 
 const FILENAME = `${process.cwd()}/telegram_group_list.json`;
 const BREAK = "\n";
@@ -55,27 +55,8 @@ class TelegramBot implements IBot {
       `Website: ${data.website?.replace("https://", "")}${BREAK}` +
       `<b>Twitter:</b> ${data.twitter?.replace("https://", "")}${BREAK}`;
 
-    if (data.twitterStats) {
-      let createdAtEmoji = "⚠️";
-
-      if (
-        olderThanDays(data.twitterStats.createdAt, 90) &&
-        !olderThanDays(data.twitterStats.createdAt, 180)
-      ) {
-        createdAtEmoji = "⁉️";
-      }
-      if (olderThanDays(data.twitterStats.createdAt, 180)) {
-        createdAtEmoji = "🔥";
-      }
-
-      message +=
-        `   Follower: ${data.twitterStats.followers}${BREAK}` +
-        `   Created at: ${createdAtEmoji} ${beautifyTime(
-          data.twitterStats.createdAt
-        )}${BREAK}` +
-        `   Verified: ${data.twitterStats.verified}${BREAK}` +
-        `   Statuses: ${data.twitterStats.statusCount}${BREAK + BREAK}`;
-    }
+    message += this.getTwitterData(data);
+    message += this.getLiquidityData(data);
 
     for (const groupId of this.groupList) {
       await this.send(message, groupId);
@@ -158,6 +139,53 @@ class TelegramBot implements IBot {
       this.saveGroupList();
     }
   }
+
+  private getTwitterData = (data: CoinData) => {
+    let message = "";
+
+    if (data.twitterStats) {
+      let createdAtEmoji = "⚠️";
+
+      if (
+        olderThanDays(data.twitterStats.createdAt, 90) &&
+        !olderThanDays(data.twitterStats.createdAt, 180)
+      ) {
+        createdAtEmoji = "⁉️";
+      }
+      if (olderThanDays(data.twitterStats.createdAt, 180)) {
+        createdAtEmoji = "🔥";
+      }
+
+      message +=
+        `   Follower: ${data.twitterStats.followers}${BREAK}` +
+        `   Created at: ${createdAtEmoji} ${beautifyTime(
+          data.twitterStats.createdAt
+        )}${BREAK}` +
+        `   Verified: ${data.twitterStats.verified}${BREAK}` +
+        `   Statuses: ${data.twitterStats.statusCount}${BREAK + BREAK}`;
+    }
+    return message;
+  };
+
+  private getLiquidityData = (data: CoinData) => {
+    let message = "";
+    if (data.exchangeData) {
+      let price = 0;
+      let liquidity = 0;
+
+      data.exchangeData.forEach((exchange) => {
+        price += exchange.price;
+        liquidity += exchange.liquidity;
+      });
+
+      message +=
+        `<b>Liquidity:</b> ${BREAK}` +
+        `   Exchanges: ${data.exchangeData.length}${BREAK}` +
+        `   Price: ${price > 0 ? price.toFixed(2) : price}${BREAK}` +
+        `   Liquidity: ${formatLiquidity(liquidity)}${BREAK + BREAK}`;
+    }
+    return message;
+  };
 }
 
 export default TelegramBot;

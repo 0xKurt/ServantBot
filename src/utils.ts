@@ -32,3 +32,21 @@ export const olderThanDays = (time: string | null | undefined, days: number): bo
 
   return date.getTime() < daysAgo;
 }
+
+export function formatLiquidity(num: number): string {
+  const units = ["", "K", "M", "B", "T"];
+  let unitIndex = 0;
+  
+  while (num >= 1000 && unitIndex < units.length - 1) {
+    num /= 1000;
+    unitIndex++;
+  }
+  
+  let formattedNum = num.toFixed(0);
+  
+  if (unitIndex > 0) {
+    formattedNum += units[unitIndex];
+  }
+  
+  return formattedNum;
+}

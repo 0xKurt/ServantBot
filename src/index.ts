@@ -8,6 +8,7 @@ import BotManager from "./bots/BotManager";
 import TelegramBot from "./bots/telegram/TelegramBot";
 import ModifierManager from "./modules/DatasetModifier/ModifierManager";
 import TwitterModifier from "./modules/DatasetModifier/TwitterModifier";
+import ExchangeDataModifier from "./modules/DatasetModifier/ExchangeDataModifier";
 
 dotenv.config();
 
@@ -41,6 +42,7 @@ const modManager = new ModifierManager();
 
 // Register all the modifiers here
 modManager.registerMod(new TwitterModifier()); // add followers count
+modManager.registerMod(new ExchangeDataModifier()); // add followers count
 
 // ===> Main loop
 // This will run every 10 minutes by default
