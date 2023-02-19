@@ -36,7 +36,7 @@ class Coinmarketcap implements ICoinDataModule {
       const maxRetries = 5;
       const retryInterval = 5 * 60 * 1000; // 5 minutes in milliseconds
 
-      while (!metaData && retries < maxRetries) {
+      while (!metaData && retries < maxRetries && retries != 0) {
         if (retries > 0) {
           console.log(
             `Failed to get metadata. Retrying in ${
