@@ -47,7 +47,7 @@ jobs:
         -p ${{ secrets.SSH_PORT }} \
         ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} \
         'cd ~/app/ServantBot \
-        && git pull --force origin master \
+        && git pull --rebase origin master \
         && yarn \
         && yarn build \
         && COINMARKETCAP_API_KEY=${{ secrets.COINMARKETCAP_API_KEY }} \
