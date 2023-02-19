@@ -55,13 +55,18 @@ const task = async () => {
     result.forEach(async (data) => {
       let modData = data;
       modData = await modManager.applyChanges(data);
-      await botManager.sendMessage(modData);
+      if (process.env.PRODUCTION === "true") {
+        await botManager.sendMessage(modData);
+      } else {
+        console.log("==== Sending to botManager ====")
+        console.log(modData);
+      }
     });
   }
 };
 
-const main = async () => {
-  if (process.env.PRODUCTION && telegramBot) {
+const onStartup = async () => {
+  if (process.env.PRODUCTION === "true" && telegramBot) {
     await telegramBot.sendText(
       `🤖 <b>TokenServantBot</b> 🤖 \nstarted at ${timeNow()}\n\nI will send the last dataset again to test my functionality.`
     );
@@ -70,7 +75,7 @@ const main = async () => {
 };
 
 setTimeout(async () => {
-  await main();
+  await onStartup();
 }, 10 * 1000);
 
 setInterval(
