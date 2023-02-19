@@ -185,24 +185,22 @@ class TelegramBot implements IBot {
         liquidity += exchange.liquidity;
       });
 
-      if (data.twitterStats) {
-        let liqEmoji = "⚠️";
+      let liqEmoji = "⚠️";
 
-        if (liquidity > 100000) {
-          liqEmoji = "⁉️";
-        }
-        if (liquidity > 1000000) {
-          liqEmoji = "🔥";
-        }
-
-        message +=
-          `${BREAK}<b>Liquidity:</b> ${BREAK}` +
-          `   Exchanges: ${data.exchangeData.length}${BREAK}` +
-          `   Price: $${price > 1 ? price.toFixed(2) : price}${BREAK}` +
-          `   Liquidity: $${formatLiquidity(liquidity)} ${liqEmoji} ${
-            BREAK + BREAK
-          }`;
+      if (liquidity > 100000) {
+        liqEmoji = "⁉️";
       }
+      if (liquidity > 1000000) {
+        liqEmoji = "🔥";
+      }
+
+      message +=
+        `${BREAK}<b>Liquidity:</b> ${BREAK}` +
+        `   Exchanges: ${data.exchangeData.length}${BREAK}` +
+        `   Price: $${price > 1 ? price.toFixed(2) : price}${BREAK}` +
+        `   Liquidity: $${formatLiquidity(liquidity)} ${liqEmoji} ${
+          BREAK + BREAK
+        }`;
     }
     return message;
   };
