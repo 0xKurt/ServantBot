@@ -76,6 +76,10 @@ class TelegramBot implements IBot {
         `   Verified: ${data.twitterStats.verified}${BREAK}` +
         `   Statuses: ${data.twitterStats.statusCount}${BREAK + BREAK}`;
     }
+
+    for (const groupId of this.groupList) {
+      await this.send(message, groupId);
+    }
   }
 
   private async send(text: string, groupId: string): Promise<void> {
