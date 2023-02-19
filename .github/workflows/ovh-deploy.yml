@@ -26,7 +26,7 @@ jobs:
     - run: yarn build
 
   deploy:
-    needs: [build, pull_request]
+    needs: [build]
     runs-on: ubuntu-latest
 
     steps:
@@ -54,5 +54,5 @@ jobs:
         TELEGRAM_API_KEY=${{ secrets.TELEGRAM_API_KEY }} \
         TWITTER_API=${{ secrets.TWITTER_API }} \
         PRODUCTION=${{ secrets.PRODUCTION }} \
-        UPDATES=${{ github.event.pull_request.body }} \
+        UPDATES=${{ github.event.push.body }} \
         npx pm2 restart --update-env tokenservant-app'
