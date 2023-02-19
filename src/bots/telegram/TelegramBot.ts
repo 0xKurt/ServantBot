@@ -58,8 +58,13 @@ class TelegramBot implements IBot {
     message += this.getTwitterData(data);
     message += this.getLiquidityData(data);
 
-    for (const groupId of this.groupList) {
-      await this.send(message, groupId);
+    if (process.env.PRODUCTION === "true") {
+      for (const groupId of this.groupList) {
+        await this.send(message, groupId);
+      }
+    } else {
+      console.log("Telegram bot send:")
+      console.log(message);
     }
   }
 
@@ -181,8 +186,8 @@ class TelegramBot implements IBot {
       message +=
         `<b>Liquidity:</b> ${BREAK}` +
         `   Exchanges: ${data.exchangeData.length}${BREAK}` +
-        `   Price: ${price > 0 ? price.toFixed(2) : price}${BREAK}` +
-        `   Liquidity: ${formatLiquidity(liquidity)}${BREAK + BREAK}`;
+        `   Price: $${price > 1 ? price.toFixed(2) : price}${BREAK}` +
+        `   Liquidity: $${formatLiquidity(liquidity)}${BREAK + BREAK}`;
     }
     return message;
   };
