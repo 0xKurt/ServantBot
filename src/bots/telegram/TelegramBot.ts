@@ -3,7 +3,7 @@ import fs from "fs";
 import IBot from "../IBot";
 import { CoinData } from "../../types";
 import axios from "axios";
-import { beautifyTime } from "../../utils";
+import { beautifyTime, olderThanDays } from "../../utils";
 
 const FILENAME = `${process.cwd()}/telegram_group_list.json`;
 const BREAK = "\n";
@@ -48,35 +48,43 @@ class TelegramBot implements IBot {
   // styling: https://core.telegram.org/bots/api#html-style
   public async sendMessage(data: CoinData): Promise<void> {
     let message =
-    `<b>💎 New listing 💎\n${data.name} (${data.symbol})</b>${BREAK}` +
-    `${data.cmc?.replace("https://", "")}${BREAK + BREAK}` +
+      `<b>💎 New listing 💎\n${data.name} (${data.symbol})</b>${BREAK}` +
+      `${data.cmc?.replace("https://", "")}${BREAK + BREAK}` +
+      `Network: ${data.network}${BREAK}` +
+      `Address: ${data.address}${BREAK + BREAK}` +
+      `Website: ${data.website?.replace("https://", "")}${BREAK}` +
+      `<b>Twitter:</b> ${data.twitter?.replace("https://", "")}${BREAK}`;
 
-    `Network: ${data.network}${BREAK}` +
-    `Address: ${data.address}${BREAK + BREAK}` +
-    `Date added: ${beautifyTime(data.dateAdded)}${BREAK}` +
-    `Date launched: ${beautifyTime(data.dateLaunched)}${BREAK + BREAK}` +
+    if (data.twitterStats) {
+      let createdAtEmoji = "⚠️";
+      if (!olderThanDays(data.twitterStats.createdAt, 90)) {
+        createdAtEmoji = "⚠️";
+      }
+      if (
+        olderThanDays(data.twitterStats.createdAt, 90) &&
+        !olderThanDays(data.twitterStats.createdAt, 180)
+      ) {
+        createdAtEmoji = "⁉️";
+      }
+      if (olderThanDays(data.twitterStats.createdAt, 180)) {
+        createdAtEmoji = "🔥";
+      }
 
-    `Website: ${data.website?.replace("https://", "")}${BREAK+BREAK}` +
-
-    `<b>Twitter:</b> ${data.twitter?.replace("https://", "")}${BREAK}`;
-  
-  if (data.twitterStats) {
-    message +=
-      `   Follower: ${data.twitterStats.followers}${BREAK}` +
-      `   Created at: ${beautifyTime(data.twitterStats.createdAt)}${BREAK}` +
-      `   Verified: ${data.twitterStats.verified}${BREAK}` +
-      `   Statuses: ${data.twitterStats.statusCount}${BREAK + BREAK}`;
-  }
+      message +=
+        `   Follower: ${data.twitterStats.followers}${BREAK}` +
+        `   Created at: ${createdAtEmoji} ${beautifyTime(
+          data.twitterStats.createdAt
+        )}${BREAK}` +
+        `   Verified: ${data.twitterStats.verified}${BREAK}` +
+        `   Statuses: ${data.twitterStats.statusCount}${BREAK + BREAK}`;
+    }
 
     for (const groupId of this.groupList) {
       await this.send(message, groupId);
     }
   }
 
-  private async send(
-    text: string,
-    groupId: string,
-  ): Promise<void> {
+  private async send(text: string, groupId: string): Promise<void> {
     try {
       await this.bot.telegram.sendMessage(groupId, text, {
         parse_mode: "HTML",
@@ -141,7 +149,11 @@ class TelegramBot implements IBot {
       const updates = json.result;
 
       for (const update of updates) {
-        if (update.my_chat_member && (update.my_chat_member.chat.type === "group" || update.my_chat_member.chat.type === "supergroup")) {
+        if (
+          update.my_chat_member &&
+          (update.my_chat_member.chat.type === "group" ||
+            update.my_chat_member.chat.type === "supergroup")
+        ) {
           this.groupList.add(update.my_chat_member.chat.id.toString());
         }
       }
