@@ -49,11 +49,12 @@ class TelegramBot implements IBot {
   public async sendMessage(data: CoinData): Promise<void> {
     let message =
       `<b>💎 New listing 💎\n${data.name} (${data.symbol})</b>${BREAK}` +
-      `${data.cmc?.replace("https://", "")}${BREAK}` +
+      `<a href="${data.cmc?.replace("https://", "")}">Coinmarketcap</a> • ` +
+      `<a href="${data.website?.replace("https://", "")}>Website"</a> • ` +
+      `<a href="${data.twitter?.replace("https://", "")}">Twitter</a>${BREAK}` +
       `${BREAK}Network: ${data.network}${BREAK}` +
       `Address: ${data.address}${BREAK}` +
-      `Website: ${data.website?.replace("https://", "")}${BREAK}` +
-      `${BREAK}<b>Twitter:</b> ${data.twitter?.replace("https://", "")}${BREAK}`;
+      `Website: ${data.website?.replace("https://", "")}${BREAK}`;
 
     message += this.getTwitterData(data);
     message += this.getLiquidityData(data);
@@ -63,7 +64,7 @@ class TelegramBot implements IBot {
         await this.send(message, groupId);
       }
     } else {
-      console.log("Telegram bot send:")
+      console.log("Telegram bot send:");
       console.log(message);
     }
   }
@@ -162,10 +163,11 @@ class TelegramBot implements IBot {
       }
 
       message +=
+        `${BREAK}<b>Twitter Stats:</b> ${BREAK}` +
         `   Follower: ${data.twitterStats.followers}${BREAK}` +
-        `   Created at: ${createdAtEmoji} ${beautifyTime(
+        `   Created at: ${beautifyTime(
           data.twitterStats.createdAt
-        )}${BREAK}` +
+        )} ${createdAtEmoji} ${BREAK}` +
         `   Verified: ${data.twitterStats.verified}${BREAK}` +
         `   Statuses: ${data.twitterStats.statusCount}${BREAK + BREAK}`;
     }
@@ -183,11 +185,24 @@ class TelegramBot implements IBot {
         liquidity += exchange.liquidity;
       });
 
-      message +=
-        `${BREAK}<b>Liquidity:</b> ${BREAK}` +
-        `   Exchanges: ${data.exchangeData.length}${BREAK}` +
-        `   Price: $${price > 1 ? price.toFixed(2) : price}${BREAK}` +
-        `   Liquidity: $${formatLiquidity(liquidity)}${BREAK + BREAK}`;
+      if (data.twitterStats) {
+        let liqEmoji = "⚠️";
+
+        if (liquidity > 100000) {
+          liqEmoji = "⁉️";
+        }
+        if (liquidity > 1000000) {
+          liqEmoji = "🔥";
+        }
+
+        message +=
+          `${BREAK}<b>Liquidity:</b> ${BREAK}` +
+          `   Exchanges: ${data.exchangeData.length}${BREAK}` +
+          `   Price: $${price > 1 ? price.toFixed(2) : price}${BREAK}` +
+          `   Liquidity: $${formatLiquidity(liquidity)} ${liqEmoji} ${
+            BREAK + BREAK
+          }`;
+      }
     }
     return message;
   };
