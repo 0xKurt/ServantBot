@@ -50,7 +50,7 @@ class TelegramBot implements IBot {
     let message =
       `<b>💎 New listing 💎\n${data.name} (${data.symbol})</b>${BREAK}` +
       `<a href="${data.cmc}">Coinmarketcap</a> • ` +
-      `<a href="${data.website}">Website"</a> • ` +
+      `<a href="${data.website}">Website</a> • ` +
       `<a href="${data.twitter}">Twitter</a>${BREAK}` +
       `${BREAK}Network: ${data.network}${BREAK}` +
       `Address: ${data.address}${BREAK}`
