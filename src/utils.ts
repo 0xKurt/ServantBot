@@ -3,7 +3,7 @@ export const timeNow = (): string => {
 };
 
 export const beautifyTime = (time: string | null | undefined): string => {
-  const date = time ? new Date(time) : new Date();
+  const date = getDate(time);
   const dateOptions: any = {
     day: "2-digit",
     month: "2-digit",
@@ -16,3 +16,19 @@ export const beautifyTime = (time: string | null | undefined): string => {
 
   return `${dateString} ${timeString}`;
 };
+
+export const getDate = (time: string | null | undefined): Date => {
+  return time ? new Date(time) : new Date();
+}
+
+
+export const olderThanDays = (time: string | null | undefined, days: number): boolean => {
+  if(!time) return false;
+
+  const date = getDate(time);
+
+  const now = Date.now();
+  const daysAgo = now - days * 24 * 60 * 60 * 1000;
+
+  return date.getTime() < daysAgo;
+}

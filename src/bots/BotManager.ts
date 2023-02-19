@@ -18,7 +18,14 @@ class BotManager {
   async sendMessage(data: CoinData): Promise<void> {
     for (const bot of this.bots) {
       // console.log(`     ${pc.green("✓")} Sending data to bot: ${bot.name()}`, data);
-      await bot.sendMessage(data);
+      if (process.env.PRODUCTION === "true") {
+        await bot.sendMessage(data);
+      } else {
+        console.log(
+          `     ${pc.green(">")} Sending data to bot: ${bot.name()} \n${data}`,
+          data
+        );
+      }
     }
   }
 }
