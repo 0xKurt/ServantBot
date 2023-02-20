@@ -53,7 +53,7 @@ class TelegramBot implements IBot {
       `<a href="${data.website}">Website</a> • ` +
       `<a href="${data.twitter}">Twitter</a>${BREAK}` +
       `${BREAK}Network: ${data.network}${BREAK}` +
-      `Address: ${data.address}${BREAK}`
+      `Address: ${data.address}${BREAK}`;
 
     message += this.getTwitterData(data);
     message += this.getLiquidityData(data);
@@ -155,7 +155,7 @@ class TelegramBot implements IBot {
         olderThanDays(data.twitterStats.createdAt, 90) &&
         !olderThanDays(data.twitterStats.createdAt, 180)
       ) {
-        createdAtEmoji = "⁉️";
+        createdAtEmoji = "";
       }
       if (olderThanDays(data.twitterStats.createdAt, 180)) {
         createdAtEmoji = "🔥";
@@ -168,7 +168,7 @@ class TelegramBot implements IBot {
           data.twitterStats.createdAt
         )} ${createdAtEmoji} ${BREAK}` +
         `   Verified: ${data.twitterStats.verified}${BREAK}` +
-        `   Statuses: ${data.twitterStats.statusCount}${BREAK + BREAK}`;
+        `   Statuses: ${data.twitterStats.statusCount}${BREAK}`;
     }
     return message;
   };
@@ -187,7 +187,7 @@ class TelegramBot implements IBot {
       let liqEmoji = "⚠️";
 
       if (liquidity > 50000) {
-        liqEmoji = "⁉️";
+        liqEmoji = "";
       }
       if (liquidity > 1000000) {
         liqEmoji = "🔥";
@@ -197,9 +197,7 @@ class TelegramBot implements IBot {
         `${BREAK}<b>Liquidity:</b> ${BREAK}` +
         `   Exchanges: ${data.exchangeData.length}${BREAK}` +
         `   Price: $${price > 1 ? price.toFixed(2) : price}${BREAK}` +
-        `   Liquidity: $${formatLiquidity(liquidity)} ${liqEmoji} ${
-          BREAK + BREAK
-        }`;
+        `   Liquidity: $${formatLiquidity(liquidity)} ${liqEmoji} ${BREAK}`;
     }
     return message;
   };
