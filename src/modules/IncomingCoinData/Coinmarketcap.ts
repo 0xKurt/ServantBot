@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getChainId } from "../../../chainId";
 
 import { CoinData } from "../../types";
 import ICoinDataModule from "./ICoinDataModule";
@@ -87,7 +88,7 @@ const generalizeData = (newListings: any[], metaData: any): CoinData[] => {
       name: listing.name,
       address: listing?.platform?.token_address,
       network: listing?.platform?.name,
-      networkId: listing?.platform?.id,
+      networkId: getChainId(listing?.platform?.name),
       dateAdded: listing.date_added,
       dateLaunched: listing?.date_launched || listing.date_added,
       website: meta?.urls?.website[0],
@@ -95,6 +96,7 @@ const generalizeData = (newListings: any[], metaData: any): CoinData[] => {
       twitterUser: meta?.twitter_username,
       cmc: `https://coinmarketcap.com/currencies/${meta?.slug}`,
     };
+
     coinData.push(tmpData);
   }
   return coinData;

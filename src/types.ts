@@ -12,6 +12,7 @@ export type CoinData = {
   cmc?: string | null;
   twitterStats?: TwitterStats;
   exchangeData?: ExchangeData[];
+  onChainData?: OnChainData;
 }
 
 export type TwitterStats = {
@@ -28,4 +29,6 @@ export type ExchangeData = {
   liquidity: number;
 }
 
-
+export type OnChainData = {
+  tokenHolderCount: number;
+}
