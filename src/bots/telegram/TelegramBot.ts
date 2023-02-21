@@ -57,6 +57,7 @@ class TelegramBot implements IBot {
 
     message += this.getTwitterData(data);
     message += this.getLiquidityData(data);
+    message += this.getOnChainData(data);
 
     if (process.env.PRODUCTION === "true") {
       for (const groupId of this.groupList) {
@@ -201,6 +202,17 @@ class TelegramBot implements IBot {
     }
     return message;
   };
+
+  private getOnChainData = (data: CoinData) => {
+    let message = "";
+    if (data.onChainData?.tokenHolderCount) {
+      const prefix = data.onChainData?.tokenHolderCount > 10000 ? ">" : "";
+      message +=
+        `${BREAK}<b>On Chain:</b> ${BREAK}` +
+        `   Holders: ${prefix}${data.onChainData?.tokenHolderCount}${BREAK}`
+      };
+    return message;
+  }
 }
 
 export default TelegramBot;

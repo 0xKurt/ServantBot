@@ -9,10 +9,11 @@ import TelegramBot from "./bots/telegram/TelegramBot";
 import ModifierManager from "./modules/DatasetModifier/ModifierManager";
 import TwitterModifier from "./modules/DatasetModifier/TwitterModifier";
 import ExchangeDataModifier from "./modules/DatasetModifier/ExchangeDataModifier";
+import OnChainDataModifier from "./modules/DatasetModifier/OnChainDataMadifier";
 
 dotenv.config();
 
-console.log(pc.green(pc.bold("🤖 TokenServantBot started")));
+console.log(pc.green(pc.bold(`🤖 TokenServantBot started at at ${timeNow()}`)));
 
 // CoinDataManager is a class that will call all the APIs and merge the data together
 // It will also filter out any duplicate data
@@ -42,7 +43,8 @@ const modManager = new ModifierManager();
 
 // Register all the modifiers here
 modManager.registerMod(new TwitterModifier()); // add followers count
-modManager.registerMod(new ExchangeDataModifier()); // add followers count
+modManager.registerMod(new ExchangeDataModifier()); // add liquidity and exchange count
+modManager.registerMod(new OnChainDataModifier()); // add token holder count
 
 // ===> Main loop
 // This will run every 10 minutes by default
