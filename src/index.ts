@@ -13,7 +13,7 @@ import OnChainDataModifier from "./modules/DatasetModifier/OnChainDataMadifier";
 
 dotenv.config();
 
-console.log(pc.green(pc.bold("🤖 TokenServantBot started")));
+console.log(pc.green(pc.bold(`🤖 TokenServantBot started at at ${timeNow()}`)));
 
 // CoinDataManager is a class that will call all the APIs and merge the data together
 // It will also filter out any duplicate data
